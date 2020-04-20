@@ -52,8 +52,11 @@ def store_zdata(key, data):
     for i in range(0,n,2):
         if data[i+1] in value_score_map[key].keys():
             temp = value_score_map[key][data[i+1]]
-            idx = zdata_store[key][temp].index(data[i+1])
-            del zdata_store[key][temp][idx]
+            if len(zdata_store[key][temp]) > 1:
+                idx = zdata_store[key][temp].index(data[i+1])
+                del zdata_store[key][temp][idx]
+            elif len(zdata_store[key][temp]) == 1:
+                del zdata_store[key][temp]
         value_score_map[key][data[i+1]] = data[i]
         if data[i] not in zdata_store[key]:
             zdata_store[key][data[i]] = SortedList()

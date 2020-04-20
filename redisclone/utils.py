@@ -88,8 +88,8 @@ def load_data_on_start():
 
 
 def add_jobs():
-    scheduler.start()
     load_data_on_start()
     # job = scheduler.add_job(load_data_on_start, 'interval', seconds=1, id='1',replace_existing=False)
     job = scheduler.add_job(save_data_in_disk,'interval' , seconds=10, replace_existing=False)
     job = scheduler.add_job(delete_key_value, 'interval' , seconds=6, replace_existing=True)
+    scheduler.start()

@@ -84,11 +84,12 @@ def load_data_on_start():
         zdata_store = json.load(fp)
     with open('./timeout_key.json', 'r') as fp:
         timeout_key = json.load(fp)
-    scheduler.remove_job('1')
+    # scheduler.remove_job('1')
 
 
 def add_jobs():
     scheduler.start()
-    job = scheduler.add_job(load_data_on_start, 'interval', seconds=1, id='1', max_instances=1,replace_existing=True)
+    load_data_on_start()
+    # job = scheduler.add_job(load_data_on_start, 'interval', seconds=1, id='1',replace_existing=False)
     job = scheduler.add_job(save_data_in_disk,'interval' , seconds=10, replace_existing=False)
     job = scheduler.add_job(delete_key_value, 'interval' , seconds=6, replace_existing=True)

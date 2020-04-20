@@ -9,6 +9,7 @@ import pickle
 key_value_pair = {}
 zdata_store = {}
 timeout_key = {}
+value_score_map = {}
 logger = logging.getLogger(__name__)
 
 def add_key_value(key, value):
@@ -35,6 +36,8 @@ def delete_key_value():
                     del key_value_pair[key]
                 elif key in zdata_store.keys():
                     del zdata_store[key]
+                elif key in value_score_map.keys():
+                    del value_score_map[key]
             except Exception as e:
                 logger.exception("Error:"+str(e))
     return
@@ -43,13 +46,21 @@ def store_zdata(key, data):
     n = len(data)
     if key not in zdata_store:
         zdata_store[key] = SortedDict()
+    if key not in value_score_map:
+        value_score_map[key] = {}
     cnt = 0
     for i in range(0,n,2):
+        if data[i+1] in value_score_map[key].keys():
+            temp = value_score_map[key][data[i+1]]
+            idx = zdata_store[key][temp].index(data[i+1])
+            del zdata_store[key][temp][idx]
+        value_score_map[key][data[i+1]] = data[i]
         if data[i] not in zdata_store[key]:
             zdata_store[key][data[i]] = SortedList()
         if data[i+1] not in zdata_store[key][data[i]]: 
             zdata_store[key][data[i]].add(data[i+1])
         cnt = cnt + 1
+    print(value_score_map)
     print(zdata_store)
     return cnt
 
@@ -65,8 +76,12 @@ def get_rank_for_value(key, value):
 def get_values_for_range(key, start, stop):
     target = list(zdata_store[key].values())
     print(target)
-    if stop <0:
+    print(len(target))
+    if stop < 0:
         return target[start:stop+len(target)+1]
+    elif start < 0 and stop < 0:
+        print("HIII")
+        return target[start+len(target)+1:stop+len(target)+1]
     else:
         return target[start:stop]
 
@@ -78,15 +93,19 @@ def save_data_in_disk():
         pickle.dump(zdata_store, fp)
     with open('timeout_key.pkl', 'wb') as fp:
         pickle.dump(timeout_key, fp)
+    with open('value_score_map.pkl', 'wb') as fp:
+        pickle.dump(value_score_map, fp)
 
 def load_data_on_start():
-    global key_value_pair, zdata_store, timeout_key
+    global key_value_pair, zdata_store, timeout_key, value_score_map
     with open('key_value_pair.pkl', 'rb') as fp:
         key_value_pair = pickle.load(fp)
     with open('zdata_store.pkl', 'rb') as fp:
         zdata_store = pickle.load(fp)
     with open('timeout_key.pkl', 'rb') as fp:
         timeout_key = pickle.load(fp)
+    with open('value_score_map.pkl', 'rb') as fp:
+        value_score_map =  pickle.load(fp)
     # scheduler.remove_job('1')
 
 

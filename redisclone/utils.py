@@ -78,23 +78,40 @@ def get_rank_for_value(key, value): # Get the rank for given value
         cnt = cnt + len(j)
     return 'nil'
 
-def get_values_for_range(key, start, stop): # To get the values for the given Range
+def get_values_for_range(key, start, stop, is_withscores=None): # To get the values for the given Range
     values = []
-    for item in zdata_store[key].values():
-        if len(item) ==1:
-            values.append(list(item))
-        elif len(item)>1:
-            for j in item:
-                temp = []
-                temp.append(j)
-                values.append(temp)
+    scores = []
+    if is_withscores:
+        for score, item in zdata_store[key].items():
+            if len(item) ==1:
+                values.append(list(item))
+                values.append(list(score))
+            elif len(item)>1:
+                for j in item:
+                    temp = []
+                    temp.append(j)
+                    values.append(temp)
+                    values.append(list(score))
+        print(values)
+    else:
+        for item in zdata_store[key].values():
+            if len(item) ==1:
+                values.append(list(item))
+            elif len(item)>1:
+                for j in item:
+                    temp = []
+                    temp.append(j)
+                    values.append(temp)
     if start < 0:
         start = len(values) - (-1 * start)
     if stop < 0:
         stop = len(values) - (-1 * stop)
     lower = min(start, stop)
     upper = max(start, stop)
-    ans = values[lower:upper+1]
+    if is_withscores:
+        ans = values[2*lower:2*(upper+1)]
+    else:
+        ans = values[lower:upper+1]
     return ans
 
 

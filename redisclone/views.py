@@ -72,10 +72,11 @@ def get_zrange(request):
         key = request.GET.get('key')
         start = int(request.GET.get('start'))
         stop = int(request.GET.get('stop'))
+        withscores = request.GET.get('withscores')
         values = []
         if command == 'ZRANGE' and key:
             try:
-                values = utils.get_values_for_range(key=key, start=start, stop=stop)
+                values = utils.get_values_for_range(key=key, start=start, stop=stop, is_withscores=withscores)
             except Exception as e:
                 print("Error", str(e))
                 return HttpResponse("Error")

@@ -80,3 +80,11 @@ def get_zrange(request):
                 print("Error", str(e))
                 return HttpResponse("Error")
         return HttpResponse(values)
+    
+def clear(request):
+    try:
+        utils.clear()
+    except Exception as e:
+        print("Error: "+str(e))
+        return HttpResponse(e)
+    return HttpResponse("CLEARED")

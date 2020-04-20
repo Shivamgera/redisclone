@@ -25,3 +25,5 @@
 * For ZRANK use GET `/redis/zrank/`, in request params enter `command=ZRANK`, `key=<given_key>`, `value=<given_value>`, Eg- `value=uno`.
 
 * For ZRANGE use GET `/redis/zrange/`, in request params enter `command=ZRANGE`, `key=<given_key>`, `start=<given_start>`, `stop=<given_stop>`, Eg- `start=0` , `stop=2`.
+
+* To clear the cache use GET `/redis/clear/`.

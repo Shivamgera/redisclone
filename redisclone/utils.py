@@ -54,9 +54,12 @@ def store_zdata(key, data):
     return cnt
 
 def get_rank_for_value(key, value):
+    cnt = 0
     for i, j in zdata_store[key].items():
         if value in j:
-            return j.index(value)
+            # return int(list(zdata_store[key].keys()).index(str(i)))+j.index(value)
+            return cnt + j.index(value)
+        cnt = cnt + len(j)
     return 'nil'
 
 def get_values_for_range(key, start, stop):
@@ -72,7 +75,7 @@ def save_data_in_disk():
     with open('key_value_pair.json', 'w') as fp:
         json.dump(key_value_pair, fp)
     with open('zdata_store.json', 'w') as fp:
-        json.dump(zdata_store, fp, default=str)
+        json.dump(zdata_store, fp, default=lambda o: o.__dict__)
     with open('timeout_key.json', 'w') as fp:
         json.dump(timeout_key, fp, default=str)
 
@@ -88,7 +91,7 @@ def load_data_on_start():
 
 
 def add_jobs():
-    load_data_on_start()
+    # load_data_on_start()
     # job = scheduler.add_job(load_data_on_start, 'interval', seconds=1, id='1',replace_existing=False)
     job = scheduler.add_job(save_data_in_disk,'interval' , seconds=10, replace_existing=False)
     job = scheduler.add_job(delete_key_value, 'interval' , seconds=6, replace_existing=True)

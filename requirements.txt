@@ -7,7 +7,7 @@ blinker==1.4
 certifi==2018.8.24
 cffi==1.14.0
 chardet==3.0.4
-cryptography==2.6.1
+cryptography==3.2
 Django==3.0.5
 lazy-object-proxy==1.4.3
 pkg-resources==0.0.0
